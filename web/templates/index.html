@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Service</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <h1>Authentication Service</h1>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <h2>Login</h2>
+                <form id="login">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" onclick="toggleForms('registerForm')">Register</a></p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <h2>Register</h2>
+                <form id="register">
+                    <div class="form-group">
+                        <label for="reg-username">Username:</label>
+                        <input type="text" id="reg-username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Email:</label>
+                        <input type="email" id="reg-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password:</label>
+                        <input type="password" id="reg-password" name="password" required>
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="#" onclick="toggleForms('loginForm')">Login</a></p>
+            </div>
+
+            <!-- TOTP Form -->
+            <div id="totpForm" class="auth-form" style="display: none;">
+                <h2>Enter 2FA Code</h2>
+                <form id="totp">
+                    <div class="form-group">
+                        <label for="totp-code">Enter the 6-digit code from your authenticator app:</label>
+                        <input type="text" 
+                               id="totp-code" 
+                               name="code" 
+                               required 
+                               pattern="[0-9]{6}" 
+                               maxlength="6"
+                               minlength="6"
+                               inputmode="numeric"
+                               autocomplete="one-time-code"
+                               placeholder="Enter 6-digit code">
+                        <div id="totp-timer" class="timer"></div>
+                    </div>
+                    <button type="submit">Verify</button>
+                </form>
+                <p class="help-text">The code changes every 30 seconds. Please enter the current code.</p>
+            </div>
+
+            <!-- TOTP Setup -->
+            <div id="totpSetup" class="auth-form" style="display: none;">
+                <h2>Setup 2FA</h2>
+                <div class="qr-container">
+                    <img id="qrCode" src="" alt="QR Code">
+                </div>
+                <p>Scan this QR code with your authenticator app or enter the code manually:</p>
+                <p id="manualCode" class="manual-code"></p>
+                <button onclick="completeTOTPSetup()">I've added the code</button>
+            </div>
+
+            <!-- User Dashboard -->
+            <div id="dashboard" class="auth-form" style="display: none;">
+                <h2>Welcome <span id="username-display"></span></h2>
+                <div class="user-info">
+                    <p>Email: <span id="user-email"></span></p>
+                    <p>2FA Status: <span id="totp-status"></span></p>
+                </div>
+                <div class="actions">
+                    <button onclick="setupTOTP()" id="setup-totp-btn">Setup 2FA</button>
+                    <button id="disable-totp-btn" style="display: none;" class="warning">Disable 2FA</button>
+                    <button onclick="logout()" class="danger">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content success">
+            <h2>Success</h2>
+            <p id="errorMessage"></p>
+            <button onclick="closeErrorModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content success">
+            <h2>Success</h2>
+            <p id="success-message"></p>
+            <button id="close-success-btn">Close</button>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+</body>
+</html> 
